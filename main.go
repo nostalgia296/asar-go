@@ -6,6 +6,12 @@ import (
 	"github.com/nostalgia296/asar-go/asar"
 )
 
+var (
+    Version = "1.0"
+    GoVersion string
+    BuildAt string
+    Author = "Nostalgia"
+)
 func main() {
 	args := os.Args
 
@@ -15,6 +21,7 @@ func main() {
 		fmt.Println("Commands:")
 		fmt.Println("  p - Pack a directory into an ASAR file")
 		fmt.Println("  e - Extract an ASAR file into a directory")
+		fmt.Println("  v - Show version and buildtime")
 		return
 	}
 
@@ -34,7 +41,12 @@ func main() {
 		}
 		// 调用 Unpack 方法
 		asar.Unpack(args[2], args[3])
+    case "v":
+        fmt.Printf("Version : %s \n", Version)
+        fmt.Printf("BuildAt : %s \n", BuildAt)
+        fmt.Printf("GoVersion : %s \n", GoVersion)
+        fmt.Printf("Author : %s", Author)
 	default:
-		fmt.Println("Invalid command. Use 'p' to pack or 'e' to extract.")
+		fmt.Println("Invalid command. Use 'p' to pack, 'e' to extract or 'v' to show version")
 	}
 }
