@@ -45,7 +45,7 @@ func main() {
         fmt.Printf("Version : %s \n", Version)
         fmt.Printf("BuildAt : %s \n", BuildAt)
         fmt.Printf("GoVersion : %s \n", GoVersion)
-        fmt.Printf("Author : %s", Author)
+        fmt.Printf("Author : %s \n", Author)
 	default:
 		fmt.Println("Invalid command. Use 'p' to pack, 'e' to extract or 'v' to show version")
 	}
