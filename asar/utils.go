@@ -266,3 +266,16 @@ func ReadJson(asar string) ([]byte, error) {
 
 	return data, nil
 }
+
+func Traverse(node map[string]interface{}, currentPath string) {
+
+    for name, subNode := range node {
+        if files, ok := subNode.(map[string]interface{})["files"].(map[string]interface{}); ok {
+
+            Traverse(files, currentPath + name + "/")
+        } else {
+
+            fmt.Printf("%s \n", currentPath + name)
+        }
+    }
+}
