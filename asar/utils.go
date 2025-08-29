@@ -234,3 +234,35 @@ func Unpack(asar string, dst string) error {
 	})
 }
 
+func ReadJson(asar string) ([]byte, error) {
+	file, err := os.Open(asar)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	preheader := make([]byte, 16)
+	if _, err := io.ReadFull(file, preheader); err != nil {
+		return nil, err
+	}
+
+	dataLengthWithPadding := binary.LittleEndian.Uint32(preheader[8:12])
+	dataLength := binary.LittleEndian.Uint32(preheader[12:16])
+
+
+	data := make([]byte, dataLength)
+	if _, err := io.ReadFull(file, data); err != nil {
+		return nil, err
+	}
+
+	
+	paddingLength := int(dataLengthWithPadding - dataLength)
+	if paddingLength > 0 {
+		if _, err := file.Seek(int64(paddingLength), io.SeekCurrent); err != nil {
+			return nil, err
+		}
+	}
+
+
+
+	return data, nil
+}
