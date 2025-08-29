@@ -1,20 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"encoding/json"
+	"fmt"
 	"github.com/nostalgia296/asar-go/asar"
+	"os"
 )
 
 var (
-    Version = "1.1"
-    GoVersion string
-    BuildAt string
-    Author = "Nostalgia"
-    jsonMap map[string]interface{}
+	Version   = "1.1"
+	GoVersion string
+	BuildAt   string
+	Author    = "Nostalgia"
+	jsonMap   map[string]interface{}
 )
-
 
 func main() {
 	args := os.Args
@@ -46,22 +45,22 @@ func main() {
 		}
 		asar.Unpack(args[2], args[3])
 	case "l":
-	    if len(args) < 3 {
+		if len(args) < 3 {
 			fmt.Println("Usage: l <ASAR file> ")
 			return
-			}
-        jsons, _ := asar.ReadJson(args[2])
-	    err := json.Unmarshal([]byte(jsons), &jsonMap)
-	    if err != nil {
-		    fmt.Println("Error unmarshalling JSON")
-	                 }
-	    asar.Traverse(jsonMap["files"].(map[string]interface{}), "./")
+		}
+		jsons, _ := asar.ReadJson(args[2])
+		err := json.Unmarshal([]byte(jsons), &jsonMap)
+		if err != nil {
+			fmt.Println("Error unmarshalling JSON")
+		}
+		asar.Traverse(jsonMap["files"].(map[string]interface{}), "./")
 
-    case "v":
-        fmt.Printf("Version : %s \n", Version)
-        fmt.Printf("BuildAt : %s \n", BuildAt)
-        fmt.Printf("GoVersion : %s \n", GoVersion)
-        fmt.Printf("Author : %s \n", Author)
+	case "v":
+		fmt.Printf("Version : %s \n", Version)
+		fmt.Printf("BuildAt : %s \n", BuildAt)
+		fmt.Printf("GoVersion : %s \n", GoVersion)
+		fmt.Printf("Author : %s \n", Author)
 	default:
 		fmt.Println("Invalid command. Use 'p' to pack, 'e' to extract , 'v' to show version , 'l' to show list")
 	}
