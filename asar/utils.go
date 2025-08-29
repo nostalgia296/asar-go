@@ -18,23 +18,23 @@ var (
 filesToDump []string
 ts = time.Now()
 )
-//处理文件json格式
+
 type fileEntry struct {
 	Offset string `json:"offset"`
 	Size   int    `json:"size"`
 }
-//处理目录json格式
+
 type directoryEntry struct {
 	Files map[string]interface{} `json:"files"`
 }
 
 func makeJson(sourceFlag string) []byte {
 	offset := 0
-//DirectoryEntry实例index。Files初始化map
+
 	index := directoryEntry{
 		Files: make(map[string]interface{}),
 	}
-//解析软连接的真实指向，存放到walkRoot
+
 	walkRoot, err := filepath.EvalSymlinks(sourceFlag)
 	if err != nil {
 		fmt.Println("出现错误")
@@ -56,7 +56,7 @@ func makeJson(sourceFlag string) []byte {
 			p := strings.TrimPrefix(fullPath, walkRoot+"/")
 
 			parts := strings.Split(p, "/")
-			//处理目录
+			
 			ptr := &index
 			for _, part := range parts[:len(parts)-1] {
 				if ptr.Files[part] == nil {
