@@ -9,14 +9,14 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 	"strconv"
+	"strings"
 	"time"
 )
 
 var (
-filesToDump []string
-ts = time.Now()
+	filesToDump []string
+	ts          = time.Now()
 )
 
 type fileEntry struct {
@@ -39,8 +39,7 @@ func makeJson(sourceFlag string) []byte {
 	if err != nil {
 		fmt.Println("出现错误")
 	}
-	
-	
+
 	err = filepath.Walk(walkRoot, func(fullPath string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -56,7 +55,7 @@ func makeJson(sourceFlag string) []byte {
 			p := strings.TrimPrefix(fullPath, walkRoot+"/")
 
 			parts := strings.Split(p, "/")
-			
+
 			ptr := &index
 			for _, part := range parts[:len(parts)-1] {
 				if ptr.Files[part] == nil {
@@ -84,24 +83,21 @@ func makeJson(sourceFlag string) []byte {
 
 		return nil
 	})
-	
+
 	if err != nil {
-	    fmt.Println("出现错误")
+		fmt.Println("出现错误")
 	}
 
 	data, err := json.Marshal(index)
 	if err != nil {
 		fmt.Println("出现错误")
 	}
-	
+
 	return data
-	}
-	
-	
-	
-	
-func Pack(sourceFlag, outputFlag string){
-    data := makeJson(sourceFlag)
+}
+
+func Pack(sourceFlag, outputFlag string) {
+	data := makeJson(sourceFlag)
 	fd, err := os.Create(outputFlag)
 	if err != nil {
 		panic(err)
@@ -110,10 +106,7 @@ func Pack(sourceFlag, outputFlag string){
 
 	paddingLength := (4 - len(data)%4) % 4
 
-
-
 	preheader := make([]byte, 16)
-
 
 	binary.LittleEndian.PutUint32(preheader[0:4], 4)
 	binary.LittleEndian.PutUint32(preheader[4:8], uint32(len(data)+paddingLength+8))
@@ -138,12 +131,12 @@ func Pack(sourceFlag, outputFlag string){
 		infd.Close()
 
 	}
-	}
+}
 
 func readu32(buffer []byte) uint32 {
 	return binary.LittleEndian.Uint32(buffer[:4])
 }
-	
+
 func readHeader(reader *os.File) (uint32, map[string]interface{}, error) {
 	headerBuffer := make([]byte, 16)
 	if _, err := reader.Read(headerBuffer); err != nil {
@@ -191,7 +184,6 @@ func iterateEntries(jsonMap map[string]interface{}, callback func(map[string]int
 	}
 	return nil
 }
-
 
 func extractFile(file *os.File, dst, path, offsetStr string, headerSize uint32, val map[string]interface{}) error {
 	offset, err := strconv.ParseUint(offsetStr, 10, 64)
@@ -248,13 +240,11 @@ func ReadJson(asar string) ([]byte, error) {
 	dataLengthWithPadding := binary.LittleEndian.Uint32(preheader[8:12])
 	dataLength := binary.LittleEndian.Uint32(preheader[12:16])
 
-
 	data := make([]byte, dataLength)
 	if _, err := io.ReadFull(file, data); err != nil {
 		return nil, err
 	}
 
-	
 	paddingLength := int(dataLengthWithPadding - dataLength)
 	if paddingLength > 0 {
 		if _, err := file.Seek(int64(paddingLength), io.SeekCurrent); err != nil {
@@ -262,20 +252,18 @@ func ReadJson(asar string) ([]byte, error) {
 		}
 	}
 
-
-
 	return data, nil
 }
 
 func Traverse(node map[string]interface{}, currentPath string) {
 
-    for name, subNode := range node {
-        if files, ok := subNode.(map[string]interface{})["files"].(map[string]interface{}); ok {
+	for name, subNode := range node {
+		if files, ok := subNode.(map[string]interface{})["files"].(map[string]interface{}); ok {
 
-            Traverse(files, currentPath + name + "/")
-        } else {
+			Traverse(files, currentPath+name+"/")
+		} else {
 
-            fmt.Printf("%s \n", currentPath + name)
-        }
-    }
+			fmt.Printf("%s \n", currentPath+name)
+		}
+	}
 }
