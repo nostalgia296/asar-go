@@ -8,7 +8,7 @@ import (
 )
 
 var (
-    Version = "1.0"
+    Version = "1.1"
     GoVersion string
     BuildAt string
     Author = "Nostalgia"
@@ -26,6 +26,7 @@ func main() {
 		fmt.Println("  p - Pack a directory into an ASAR file")
 		fmt.Println("  e - Extract an ASAR file into a directory")
 		fmt.Println("  v - Show version and buildtime")
+		fmt.Println("  l - Show path and file in .asar")
 		return
 	}
 
@@ -61,6 +62,6 @@ func main() {
         fmt.Printf("GoVersion : %s \n", GoVersion)
         fmt.Printf("Author : %s \n", Author)
 	default:
-		fmt.Println("Invalid command. Use 'p' to pack, 'e' to extract or 'v' to show version")
+		fmt.Println("Invalid command. Use 'p' to pack, 'e' to extract , 'v' to show version , 'l' to show list")
 	}
 }
