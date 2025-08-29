@@ -44,6 +44,7 @@ func main() {
 			fmt.Println("Usage: e <ASAR file> <output directory>")
 			return
 		}
+		asar.Unpack(args[2], args[3])
 	case "l":
 	    if len(args) < 3 {
 			fmt.Println("Usage: l <ASAR file> ")
